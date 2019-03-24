@@ -9,11 +9,11 @@ import re
 from sklearn.model_selection import train_test_split
 import pandas as pd
 # keras imports
-# from keras.preprocessing.text import Tokenizer
-# from keras.preprocessing.sequence import pad_sequences
-# from keras.models import Sequential
-# from keras.layers import Dense, Flatten, LSTM, Conv1D, MaxPooling1D, Dropout, Activation
-# from keras.layers.embeddings import Embedding
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.models import Sequential
+from keras.layers import Dense, Flatten, LSTM, Conv1D, MaxPooling1D, Dropout, Activation
+from keras.layers.embeddings import Embedding
 
 def read_in_data():
     """
@@ -45,7 +45,7 @@ def read_in_data():
                 'tweet': ' '.join(filtered),
                 'label': row[5]
             })
-            tweets.append(' '.join(filtered))
+            tweets.append(filtered)
             labels.append(row[5])
     labels = np.array(labels)
     tweets = np.array(tweets)
@@ -54,15 +54,14 @@ def read_in_data():
 
 def get_embeddings():
     tweets, vocab, X, y = read_in_data()
-    sum = 0
-    count = 0
-    for t in tweets:
-        sum += len(t['tweet'].split())
-        count += 1
-
-    print(sum)
-    print(count)
-    print(sum/count)
+    # sum = 0
+    # count = 0
+    # for t in tweets:
+    #     sum += len(t['tweet'].split())
+    #     count += 1
+    # print(sum)
+    # print(count)
+    # print(sum/count)
     vocab_size = len(vocab)
     embeddings_index = {}
     f = open('glove.twitter.27B.100d.txt', 'r', encoding='utf-8')
@@ -90,48 +89,31 @@ def get_embeddings():
                 embeddings_index[word] = np.random.normal(scale=0.6, size=(100,))
     all_embeddings = []
     for tweet in X:
+        empty = np.zeros((len(tweet),100))
         for i in range(len(tweet)):
-            print(tweet[i])
-        # empty = np.zeros((max_len, 100))
-        # empty = np.zeros((len(tweet),100))
-        # for i in range(len(tweet)):
-        #     empty[i] = embeddings_index[tweet[i]]
-        # print(empty)
-        # front = max(0,math.floor((24 - len(tweet))/2))
-        # back = max(0,math.ceil((24 - len(tweet))/2))
-        # print(front)
-        # print(back)
-        # empty = np.pad(empty, [(front, back),(0,0)], 'constant')
-        # print(empty)
+             empty[i] = embeddings_index[tweet[i]]
+        front = max(0,math.floor((24 - len(tweet))/2))
+        back = max(0,math.ceil((24 - len(tweet))/2))
+        empty = np.pad(empty, [(front, back),(0,0)], 'constant')
         all_embeddings.append(empty)
 
-    print("______________________")
-    for em in all_embeddings:
-        print(em.shape)
-    print("__________________________")
     all_embeddings = np.array(all_embeddings)
-    # for em in all_embeddings:
-        # print(em.shape)
 
+    X_train, X_test, y_train, y_test = train_test_split(all_embeddings, y, test_size=0.3, random_state=42)
 
-    #print(embedding_matrix.shape)
-    #print(y.shape)
-
-    # X_train, X_test, y_train, y_test = train_test_split(embedding_matrix, y, test_size=0.3, random_state=42)
-    #
-    # model = Sequential()
-    # model.add(Embedding(vocab_size, 100, input_length=50,
-    #                     weights=[embedding_matrix], trainable=False))
-    # model.add(Dropout(0.2))
-    # model.add(Conv1D(64, 5, activation='relu'))
-    # model.add(MaxPooling1D(pool_size=4))
-    # model.add(LSTM(100))
-    # model.add(Dense(1, activation='sigmoid'))
-    # model.compile(loss='crossentropy', optimizer='adam', metrics=['accuracy'])
-    # model.fit(x=X_train, y=y_train, epochs=5)
-    # score = model.evaluate(X_test, y_test)
-    # hypothesis = model.predict(X_test)
-    # print(score)
+    model = Sequential()
+    model.add(Embedding(vocab_size, 100, input_length=24,
+                        weights=[X_train], trainable=False))
+    model.add(Dropout(0.2))
+    model.add(Conv1D(64, 5, activation='relu'))
+    model.add(MaxPooling1D(pool_size=4))
+    model.add(LSTM(100))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.fit(x=X_train, y=y_train, epochs=5)
+    score = model.evaluate(X_test, y_test)
+    hypothesis = model.predict(X_test)
+    print(score)
 
 def main():
     label_value = {
