@@ -1,0 +1,86 @@
+@charset "UTF-8";
+/* CSS Document */
+@import url('https://fonts.googleapis.com/css?family=Gothic+A1');
+
+body {
+	background-color: rgba(139, 212, 230, .2);
+}
+p1 {
+	float: right;
+	margin-top: 7%;
+	margin-right: 31%;
+	font-family: "Helvetica Neue", sans-serif;
+	font-weight: bold;
+	font-size: 60pt;
+	color: #2E6291;
+}
+
+
+img.biglogo {
+	margin-left: 15%;
+	width: 300px;
+	height: auto;
+}
+
+.search {
+  width: 100%;
+  position: relative
+}
+
+.searchTerm {
+  float: left;
+  width: 100%;
+  border: 3px solid #63CCF5;
+  padding: 5px;
+  height: 20px;
+  border-radius: 5px;
+  outline: none;
+  color: #9DBFAF;
+}
+
+.searchTerm:focus{
+  color: #63CCF5;
+}
+
+.searchButton {
+  position: absolute;  
+  right: -50px;
+  width: 40px;
+  height: 36px;
+  border: 1px solid #63CCF5;
+  background: #63CCF5;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+
+i {
+	color: white;
+	float: center;
+}
+
+.searchButton:hover {
+	background-color: #8BD4E6;
+}
+/*Resize the wrap to see the search bar change!*/
+.wrap {
+  	width: 50%;
+	text-align: center;
+	margin: auto;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background-color: #368FAF;
+	color: #ffffff;
+	font-size: 14px;
+	text-align: center;
+	font-weight: 100px;
+	font-family: 'Gothic A1', normal;
+}
+
