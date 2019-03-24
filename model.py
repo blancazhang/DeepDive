@@ -46,8 +46,15 @@ def read_in_data():
                 'label': row[5]
             })
             tweets.append(filtered)
-            labels.append(row[5])
+            if row[5] == '0':
+                labels.append([1,0,0])
+            elif row[5] == '1':
+                labels.append([0,1,0])
+            elif row[5] == '2':
+                labels.append([0,0,1])
+    print(labels)
     labels = np.array(labels)
+    print(labels)
     tweets = np.array(tweets)
     return tweets_df, vocab, tweets, labels
 
@@ -70,46 +77,41 @@ def get_embeddings():
         word = values[0]
         embedding = np.asarray([float(val) for val in values[1:]])
         embeddings_index[word] = embedding
-    # embedding_matrix = np.zeros((vocab_size, 100))
-    # for word, index in tokenizer.word_index.items():
-    #     if index > vocab_size - 1:
-    #         break
-    #     else:
-    #         embedding_vector = embeddings_index.get(word)
-    #         if embedding_vector is not None:
-    #             embedding_matrix[index] = embedding_vector
-    # for i, word in enumerate(X):
-    #     try:
-    #         embedding_matrix[i] = embeddings_index[word]
-    #     except KeyError:
-    #         embedding_matrix[i] = np.random.normal(scale=0.6, size=(100,))
+
     for tweet in X:
         for word in tweet:
             if word not in embeddings_index:
                 embeddings_index[word] = np.random.normal(scale=0.6, size=(100,))
     all_embeddings = []
     for tweet in X:
-        empty = np.zeros((len(tweet),100))
+        vec = np.zeros((len(tweet),100))
         for i in range(len(tweet)):
-             empty[i] = embeddings_index[tweet[i]]
+             vec[i] = embeddings_index[tweet[i]]
         front = max(0,math.floor((24 - len(tweet))/2))
         back = max(0,math.ceil((24 - len(tweet))/2))
-        empty = np.pad(empty, [(front, back),(0,0)], 'constant')
-        all_embeddings.append(empty)
+        vec = np.pad(vec, [(front, back),(0,0)], 'constant')
+        all_embeddings.append(vec.flatten())
 
     all_embeddings = np.array(all_embeddings)
-
+    print('++++++++++++++++++++++++++++++')
+    print(all_embeddings.shape)
+    print(y.shape)
+    print('++++++++++++++++++++++++++++++')
     X_train, X_test, y_train, y_test = train_test_split(all_embeddings, y, test_size=0.3, random_state=42)
+    X_train = np.expand_dims(X_train, axis=2)
+    X_test = np.expand_dims(X_test, axis=2)
+    # np.reshape(X_train, (1, X_train.shape[0], X_train.shape[1]))
+    # np.reshape(X_test, (1, X_test.shape[0], X_test.shape[1]))
 
     model = Sequential()
-    model.add(Embedding(vocab_size, 100, input_length=24,
-                        weights=[X_train], trainable=False))
-    model.add(Dropout(0.2))
-    model.add(Conv1D(64, 5, activation='relu'))
+    model.add(Conv1D(64, 5, activation='relu', input_shape=(2400,1)))
+    # model.add(Conv1D(64, 5, activation='relu'))
     model.add(MaxPooling1D(pool_size=4))
-    model.add(LSTM(100))
-    model.add(Dense(1, activation='sigmoid'))
-    model.compile(loss='crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.add(Flatten())
+    model.add(Dense(3, activation='sigmoid'))
+    # model.add(Dense(3, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
     model.fit(x=X_train, y=y_train, epochs=5)
     score = model.evaluate(X_test, y_test)
     hypothesis = model.predict(X_test)
