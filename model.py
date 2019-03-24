@@ -2,18 +2,12 @@
 import math
 import numpy as np
 import csv
-import os
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
 import re
 from sklearn.model_selection import train_test_split
-import pandas as pd
 # keras imports
-from keras.preprocessing.text import Tokenizer
-from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
-from keras.layers import Dense, Flatten, LSTM, Conv1D, MaxPooling1D, Dropout, Activation
-from keras.layers.embeddings import Embedding
+from keras.layers import Dense, Flatten, Conv1D, MaxPooling1D
 
 def read_in_data():
     """
@@ -61,14 +55,6 @@ def read_in_data():
 
 def get_embeddings():
     tweets, vocab, X, y = read_in_data()
-    # sum = 0
-    # count = 0
-    # for t in tweets:
-    #     sum += len(t['tweet'].split())
-    #     count += 1
-    # print(sum)
-    # print(count)
-    # print(sum/count)
     vocab_size = len(vocab)
     embeddings_index = {}
     f = open('glove.twitter.27B.100d.txt', 'r', encoding='utf-8')
@@ -93,23 +79,15 @@ def get_embeddings():
         all_embeddings.append(vec.flatten())
 
     all_embeddings = np.array(all_embeddings)
-    print('++++++++++++++++++++++++++++++')
-    print(all_embeddings.shape)
-    print(y.shape)
-    print('++++++++++++++++++++++++++++++')
     X_train, X_test, y_train, y_test = train_test_split(all_embeddings, y, test_size=0.3, random_state=42)
     X_train = np.expand_dims(X_train, axis=2)
     X_test = np.expand_dims(X_test, axis=2)
-    # np.reshape(X_train, (1, X_train.shape[0], X_train.shape[1]))
-    # np.reshape(X_test, (1, X_test.shape[0], X_test.shape[1]))
 
     model = Sequential()
     model.add(Conv1D(64, 5, activation='relu', input_shape=(2400,1)))
-    # model.add(Conv1D(64, 5, activation='relu'))
     model.add(MaxPooling1D(pool_size=4))
     model.add(Flatten())
     model.add(Dense(3, activation='sigmoid'))
-    # model.add(Dense(3, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     model.fit(x=X_train, y=y_train, epochs=5)
