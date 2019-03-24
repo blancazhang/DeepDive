@@ -5,6 +5,8 @@ import csv
 from nltk.corpus import stopwords
 import re
 from sklearn.model_selection import train_test_split
+import pickle
+import json
 # keras imports
 from keras.models import Sequential
 from keras.layers import Dense, Flatten, Conv1D, MaxPooling1D
@@ -46,9 +48,7 @@ def read_in_data():
                 labels.append([0,1,0])
             elif row[5] == '2':
                 labels.append([0,0,1])
-    print(labels)
     labels = np.array(labels)
-    print(labels)
     tweets = np.array(tweets)
     return tweets_df, vocab, tweets, labels
 
@@ -92,7 +92,16 @@ def get_embeddings():
 
     model.fit(x=X_train, y=y_train, epochs=5)
     score = model.evaluate(X_test, y_test)
-    hypothesis = model.predict(X_test)
+    # serialize model to JSON
+    # model_json = model.to_json()
+    # with open("model.json", "w") as json_file:
+    #     json_file.write(model_json)
+
+    # save to h5df
+    model.save("model.hdf5")
+    # serialize weights to HDF5
+    model.save_weights("model_weights.h5")
+    print("saved model to disk")
     print(score)
 
 def main():
