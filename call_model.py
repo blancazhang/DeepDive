@@ -5,13 +5,13 @@ import numpy as np
 from keras.models import load_model
 import math
 import sys
-
+from APIs import config
 
 def pull_tweets(username):
-    CONSUMER_KEY = 'OhBsZtfygfVk7TcOJexnCPeeE'
-    CONSUMER_SECRET ='6omHgLFHvFCWqqnB5LP5PKEhocE2b4VkySrUBL57OcrXJzVrKe'
-    OAUTH_TOKEN = '103314349-FfrgieFfppIyFtOsIl8skpPr9gas5eWL5TZOjIfF'
-    OAUTH_TOKEN_SECRET = '2P5dgpFcht5rh31Nq8CXiYZyBC2JcHpZLcG4MUBFdjGlb'
+    OAUTH_TOKEN = config.OAUTH_TOKEN
+    OAUTH_TOKEN_SECRET = config.OAUTH_TOKEN_SECRET
+    CONSUMER_KEY = config.CONSUMER_KEY
+    CONSUMER_SECRET = config.CONSUMER_SECRET
     auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
                            CONSUMER_KEY, CONSUMER_SECRET)
     twitter_api = twitter.Twitter(auth=auth)
