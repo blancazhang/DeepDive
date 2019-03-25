@@ -26,6 +26,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var myTableView: UITableView!
     
     var tweets : [String] = []
+    let tweetMLModel = deepdive()
     
     // Activity indicator
     var activityIndicator = UIActivityIndicatorView()
@@ -122,6 +123,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         task.resume()
+    }
+    
+    func fetchTweets() {
+        if let usernameTextField = handleLabel {
+            var tweets = [deepdive]()
+            
+            
+        }
+        
+    }
+    
+    func makePrediction() {
+        
     }
     
     override func viewDidLoad() {

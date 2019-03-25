@@ -16,6 +16,7 @@
 		D234104D22466C37009F2E71 /* Deep_DiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D234104C22466C37009F2E71 /* Deep_DiveTests.swift */; };
 		D234105822466C37009F2E71 /* Deep_DiveUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D234105722466C37009F2E71 /* Deep_DiveUITests.swift */; };
 		D234106D224737A2009F2E71 /* TweetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D234106C224737A2009F2E71 /* TweetTableViewCell.swift */; };
+		D23410702247AD8C009F2E71 /* deepdive.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = D234106F2247AD8A009F2E71 /* deepdive.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		D234105722466C37009F2E71 /* Deep_DiveUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deep_DiveUITests.swift; sourceTree = "<group>"; };
 		D234105922466C37009F2E71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D234106C224737A2009F2E71 /* TweetTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetTableViewCell.swift; sourceTree = "<group>"; };
+		D234106F2247AD8A009F2E71 /* deepdive.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = deepdive.mlmodel; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				D234103422466C2A009F2E71 /* AppDelegate.swift */,
 				D234103622466C2A009F2E71 /* ViewController.swift */,
+				D234106F2247AD8A009F2E71 /* deepdive.mlmodel */,
 				D234103822466C2A009F2E71 /* Main.storyboard */,
 				D234106C224737A2009F2E71 /* TweetTableViewCell.swift */,
 				D234103E22466C36009F2E71 /* Assets.xcassets */,
@@ -262,6 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D23410702247AD8C009F2E71 /* deepdive.mlmodel in Sources */,
 				D234103D22466C2A009F2E71 /* Deep_Dive.xcdatamodeld in Sources */,
 				D234103722466C2A009F2E71 /* ViewController.swift in Sources */,
 				D234103522466C2A009F2E71 /* AppDelegate.swift in Sources */,
