@@ -4,9 +4,17 @@ import re
 import numpy as np
 from keras.models import load_model
 import math
+import sys
 
 
 def pull_tweets(username):
+    CONSUMER_KEY = 'OhBsZtfygfVk7TcOJexnCPeeE'
+    CONSUMER_SECRET ='6omHgLFHvFCWqqnB5LP5PKEhocE2b4VkySrUBL57OcrXJzVrKe'
+    OAUTH_TOKEN = '103314349-FfrgieFfppIyFtOsIl8skpPr9gas5eWL5TZOjIfF'
+    OAUTH_TOKEN_SECRET = '2P5dgpFcht5rh31Nq8CXiYZyBC2JcHpZLcG4MUBFdjGlb'
+    auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
+                           CONSUMER_KEY, CONSUMER_SECRET)
+    twitter_api = twitter.Twitter(auth=auth)
     tl = twitter_api.statuses.user_timeline(screen_name=username, count=200)
     tweetlist = []
     for tweet in tl:
@@ -64,25 +72,31 @@ def test_tweets(tweet_embeddings):
 
 
 def main():
-    username = 'realDonaldTrump'
-    # pulled = pull_tweets(username)
-    # print(pulled)
-    trumpdata = np.load('trump.npy')
-    user1data = np.load('user1.npy')
-    user2data = np.load('user2.npy')
-    embeddings = process_tweets(user1data)
+    username = sys.argv[1]
+    pulled = pull_tweets(username)
+    print("loaded %d tweets" % (len(pulled)))
+    # trumpdata = np.load('trump.npy')
+    # user1data = np.load('user1.npy')
+    # user2data = np.load('user2.npy')
+    embeddings = process_tweets(pulled)
     hypothesis = test_tweets(embeddings)
     hypothesis = hypothesis.tolist()
     labels = []
+    hate_count = 0
+    offensive_count = 0
     for h in hypothesis:
         labels.append(h.index(max(h)))
     for i in range(len(labels)):
         if labels[i] == 0:
+            hate_count += 1
             print('hate speech detected')
-            print(user1data[i])
+            print(pulled[i])
+            print("\n")
         elif labels[i] == 1:
+            offensive_count += 1
             print('offensive language detected')
-            print(user1data[i])
+            print(pulled[i])
+            print("\n")
 
 
 if __name__ == '__main__':
