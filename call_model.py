@@ -5,7 +5,7 @@ import numpy as np
 from keras.models import load_model
 import math
 import sys
-from APIs import config
+import config
 
 def pull_tweets(username):
     OAUTH_TOKEN = config.OAUTH_TOKEN
