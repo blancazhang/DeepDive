@@ -90,13 +90,15 @@ def get_embeddings():
     model.add(Dense(3, activation='sigmoid'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    model.fit(x=X_train, y=y_train, epochs=15)
+    model.fit(x=X_train, y=y_train, epochs=12)
     score = model.evaluate(X_test, y_test)
     hypothesis = model.predict(X_test)
-    hypothesis_output = open("hypothesis.txt", "w")
-    hypothesis_output.write(hypothesis)
-    annotations = open("annotations.txt", "w")
-    annotations.write(y_test)
+    np.savetxt('hypothesis.txt', hypothesis)
+    np.savetxt('annotaions.txt', y_test)
+    # hypothesis_output = open("hypothesis.txt", "w")
+    # hypothesis_output.write(hypothesis)
+    # annotations = open("annotations.txt", "w")
+    # annotations.write(y_test)
     # save to h5df
     model.save("model.hdf5")
     # serialize weights to HDF5
